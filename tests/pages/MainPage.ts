@@ -10,6 +10,9 @@ export class MainPage extends BasePage {
    private readonly headerAddButtonPopupListLocator: Locator;
    private readonly headerNotificationsPopupLocator: Locator;
    private readonly authorizationModalLocator: Locator;
+   private readonly menuButtonLocator: Locator;
+   private readonly openMenuAriaLocator: Locator;
+   private readonly changeThemeButtonLocator: Locator;
 
    constructor(page: Page) {
       super(page);
@@ -22,10 +25,19 @@ export class MainPage extends BasePage {
       this.headerAddButtonPopupListLocator = this.page.locator('.wdp-header-right-module__uploader ul');
       this.headerNotificationsPopupLocator = this.page.locator('.wdp-notifications-popup-module__wrapper');
       this.authorizationModalLocator = this.page.locator('iframe[title="Multipass"]').contentFrame().locator('div[role="form"]');
+      this.menuButtonLocator = this.page.getByRole('button', { name: 'Открыть меню навигации' })
+      this.openMenuAriaLocator = this.page.locator('.menu-content-module__menuOpen');
+      this.changeThemeButtonLocator = this.page.getByRole('button', { name: 'Переключить на светлую тему' })
    }
    
    async open() {
       await this.page.goto('https://rutube.ru');
+   }
+   async changeThemeToWhite() {
+      await this.changeThemeButtonLocator.click();
+   }
+   async openFullMenu() {
+      await this.menuButtonLocator.click();
    }
    async headerHasCorrectAriaSnapshot() {
       await expect(this.headerLocator).toMatchAriaSnapshot({name: 'headerAriaSnapshot.yml'});
@@ -54,6 +66,11 @@ export class MainPage extends BasePage {
    async authorizationModalHasCorrectAriaSnapshot() {
       await expect(this.authorizationModalLocator).toMatchAriaSnapshot({name: 'authorizationModal.yml'});   
    }
-
+   async fullMenuHasCorrectAriaSnapshot() {
+      await expect(this.openMenuAriaLocator).toMatchAriaSnapshot({name: 'fullMenuSnapshot.yml'});
+   }
+   async checkThemeAttributeValue(attributeValue: 'dark' | 'light' ) {
+      await expect(this.page.locator('html')).toHaveAttribute('data-themeid', attributeValue);
+   }
 }
 

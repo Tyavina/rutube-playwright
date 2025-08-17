@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 
 export class BasePage {
     readonly page: Page
@@ -9,6 +9,8 @@ export class BasePage {
         await this.page.getByRole('button', { name: 'Ок', exact: true }).click();
     }
     async closeModalWindows() {
-        await this.page.getByRole('button', { name: 'Закрыть' }).click();
+        if (await expect(this.page.getByRole('button', { name: 'Закрыть' })).toBeVisible) {
+            await this.page.getByRole('button', { name: 'Закрыть' }).click();
+        }
     }
 }
