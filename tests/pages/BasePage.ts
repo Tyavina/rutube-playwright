@@ -8,4 +8,7 @@ export class BasePage {
     async closeCookiesAlert() {
         await this.page.getByRole('button', { name: 'Ок', exact: true }).click();
     }
+    async closeModalWindows() {
+        await this.page.getByRole('button', { name: 'Закрыть' }).click();
+    }
 }
